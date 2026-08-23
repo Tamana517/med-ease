@@ -3,7 +3,14 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import os
 
-app = Flask(__name__, static_folder="../public", static_url_path="")
+BASE_DIR = Path(__file__).resolve().parent.parent
+PUBLIC_DIR = BASE_DIR / "public"
+
+app = Flask(
+    __name__,
+    static_folder=str(PUBLIC_DIR),
+    static_url_path=""
+)
 
 # ---------------------------------------------------------------------------
 # ROUND 2 CONTEXT

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>MedEase — Recovery Companion</title>
+<title>MedEase — Remote Recovery &amp; Compliance Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -270,6 +270,37 @@
 
   .hidden{ display:none !important; }
 
+/* Round 2 — pandemic / no-gathering emergency banner */
+.pandemic-banner{ position:sticky; top:66px; z-index:18; display:flex; align-items:center; gap:10px; background:#3A1300; color:#FFE3CC; padding:8px 16px; font-size:11px; }
+.pb-dot{ width:8px;height:8px;border-radius:50%; background:var(--amber); flex-shrink:0; animation:pbpulse 1.6s ease-in-out infinite; }
+@keyframes pbpulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+.pb-text b{ font-weight:800; margin-right:6px; }
+.pb-text span{ opacity:.82; }
+
+/* Round 2 — Business / monetization screen */
+.biz-section-title{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--teal-dark); margin:22px 0 10px; }
+.biz-section-title:first-child{ margin-top:0; }
+.biz-metric-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.biz-metric{ background:#fff; border:1px solid var(--border); border-radius:14px; padding:13px; box-shadow:0 4px 14px -6px rgba(1,58,64,.10); }
+.biz-metric b{ display:block; font-family:'Fraunces',serif; font-size:22px; color:var(--teal-dark); }
+.biz-metric span{ font-size:10.5px; color:var(--text-muted); }
+.revenue-card{ background:linear-gradient(135deg,#013A40,#028090); color:#fff; border-radius:18px; padding:18px; box-shadow:var(--shadow); }
+.revenue-total{ font-family:'Fraunces',serif; font-size:32px; font-weight:700; margin:2px 0 12px; }
+.revenue-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid rgba(255,255,255,.14); font-size:12px; }
+.revenue-row:first-of-type{ border-top:none; }
+.revenue-row b{ color:#fff; }
+.revenue-row span{ color:rgba(255,255,255,.75); }
+.stream-card{ background:#fff; border:1px solid var(--border); border-radius:14px; padding:13px 14px; margin-bottom:9px; box-shadow:0 4px 14px -6px rgba(1,58,64,.08); }
+.stream-top{ display:flex; justify-content:space-between; align-items:baseline; }
+.stream-top h3{ margin:0; font-size:13.5px; color:var(--text-dark); }
+.stream-top b{ font-size:13px; color:var(--seafoam); white-space:nowrap; }
+.stream-card p{ margin:5px 0 3px; font-size:11px; color:var(--text-muted); line-height:1.45; }
+.stream-who{ font-size:10px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.4px; }
+.pharmacy-sim{ background:var(--off-white); border:1.5px dashed var(--border); border-radius:14px; padding:14px; text-align:center; }
+.pharmacy-sim p{ font-size:11.5px; color:var(--text-muted); margin:0 0 10px; }
+.flagged-pill{ display:inline-block; background:rgba(216,84,74,.12); color:var(--danger); font-size:10px; font-weight:800; padding:5px 10px; border-radius:20px; margin:2px 4px 2px 0; }
+.commission-toast{ margin-top:10px; font-size:11px; font-weight:700; color:var(--seafoam); }
+
 .budget-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-top:16px}
 .budget-head{display:flex;justify-content:space-between;align-items:flex-end}.budget-amount{font-family:'Fraunces',serif;font-size:34px;font-weight:700;color:var(--teal-dark)}.budget-sub{font-size:11px;color:var(--text-muted)}
 .budget-bar{height:10px;background:#E1EEEC;border-radius:10px;overflow:hidden;margin:12px 0}.budget-fill{height:100%;background:var(--mint);border-radius:10px;transition:width .4s ease}
@@ -293,6 +324,11 @@
     <div class="brand">MedEase<small>Recovery Companion</small></div>
   </header>
 
+  <div class="pandemic-banner" id="pandemicBanner">
+    <span class="pb-dot"></span>
+    <div class="pb-text"><b>Emergency Day 42/90</b><span>No in-person gathering — remote-only care in effect</span></div>
+  </div>
+
   <div class="journey-rail" id="journeyRail"></div>
 
   <main id="main"></main>
@@ -309,6 +345,10 @@
     <button class="tab-btn" data-tab="state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       <span>Live State</span>
+    </button>
+    <button class="tab-btn" data-tab="business">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M6 21V9l6-4 6 4v12M10 21v-6h4v6"/></svg>
+      <span>Business</span>
     </button>
   </nav>
 </div>
@@ -516,9 +556,24 @@ function renderChecklist(source){
       <div class="live-state-head"><div><div class="budget-sub">RECOVERY STATUS</div><div class="live-state-title">See your live state</div></div><span class="live-pill">ON DEMAND</span></div>
       <button class="state-action" onclick="addLog('Medication taken','Home').then(()=>renderLiveState())">✓ Mark medication taken & update state</button>
       <button class="state-action" onclick="renderLiveState()">↻ Open live recovery state</button>
+      <button class="state-action" id="reorderBtn" onclick="reorderMedicine()">💊 Reorder medicine via partner pharmacy</button>
+      <div class="commission-toast hidden" id="reorderToast"></div>
     </div>
   `;
   setActiveTab('home');
+}
+
+async function reorderMedicine(){
+  const btn = document.getElementById('reorderBtn');
+  const toast = document.getElementById('reorderToast');
+  if(btn) btn.textContent = 'Placing reorder…';
+  try{
+    const res = await api('/api/pharmacy/reorder', {method:'POST', body: JSON.stringify({patient_id: PATIENT?.id || 'MED-1042'})});
+    if(toast){ toast.classList.remove('hidden'); toast.textContent = `✓ Reorder sent to partner pharmacy — ₹${res.commission_this_order} commission earned (this is real revenue, not a slide claim).`; }
+  }catch(e){
+    if(toast){ toast.classList.remove('hidden'); toast.textContent = '✓ Reorder simulated locally (API unreachable in this environment).'; }
+  }
+  if(btn) btn.textContent = '💊 Reorder medicine via partner pharmacy';
 }
 
 function renderLog(){
@@ -601,9 +656,9 @@ async function renderLiveState(){
 function renderHome(){
   renderRail('resilience');
   document.getElementById('main').innerHTML = `
-    <p class="eyebrow">Mini Challenge 1 + 2 · access & resilience</p>
+    <p class="eyebrow">Round 2 · remote-only discharge</p>
     <h1 class="page-title">Get your recovery checklist</h1>
-    <p class="page-sub">If NFC chips become scarce, MedEase keeps the same recovery experience — only the access method changes.</p>
+    <p class="page-sub">No in-person follow-ups for 90 days — so the hospital, not just the patient, needs proof recovery is on track. MedEase keeps the same experience no matter how you access it.</p>
     <div class="resilience-banner"><div class="rb-top">Supply-chain resilient access</div><b>One backend. Three ways in.</b><span>NFC when available · QR when chips are scarce · short ID when no hardware exists at all.</span></div>
     <div class="tier-grid">
       <button class="tier-card" onclick="renderNfc()"><div class="tier-num">01</div><div><h3>NFC tap</h3><p>Fastest path using the hospital-issued card.</p></div><span class="tier-status">Fastest</span></button>
@@ -614,7 +669,11 @@ function renderHome(){
       <div class="live-state-head"><div><div class="budget-sub">MINI CHALLENGE 4</div><div class="live-state-title">🟢 View my live recovery state</div></div><span class="live-pill">ON DEMAND</span></div>
       <div class="truth-note">Current adherence + next action + last verified event. Tap to see the state recomputed from your activity.</div>
     </div>
-    <div class="mini-proof"><span class="proof-chip">✓ Same checklist</span><span class="proof-chip">✓ Same backend</span><span class="proof-chip">✓ Same adherence log</span></div>`;
+    <div class="mini-proof"><span class="proof-chip">✓ Same checklist</span><span class="proof-chip">✓ Same backend</span><span class="proof-chip">✓ Same adherence log</span></div>
+    <div class="live-state-card" onclick="renderBusiness()" style="cursor:pointer;margin-top:12px">
+      <div class="live-state-head"><div><div class="budget-sub">FOR HOSPITALS &amp; PARTNERS</div><div class="live-state-title">💼 See the business &amp; revenue model</div></div><span class="live-pill">MONETIZABLE</span></div>
+      <div class="truth-note">Live hospital, insurer and pharmacy revenue — computed from the same verified events, not a slide claim.</div>
+    </div>`;
   setActiveTab('home');
 }
 
@@ -666,6 +725,67 @@ function runProcessing(){
   }, 700);
 }
 
+async function renderBusiness(){
+  renderRail('');
+  document.getElementById('main').innerHTML = `
+    <p class="eyebrow">Round 2 · Monetization</p>
+    <h1 class="page-title">Business &amp; revenue model</h1>
+    <p class="page-sub">The no-gathering emergency means hospitals must discharge earlier and verify recovery remotely. That verified event trail is what every revenue stream below is priced on.</p>
+    <div id="bizBody"><p class="page-sub">Loading live business metrics…</p></div>
+  `;
+  setActiveTab('business');
+
+  let biz;
+  try{ biz = await api('/api/business/overview'); }catch(e){ biz = null; }
+
+  if(!biz){
+    document.getElementById('bizBody').innerHTML = `<div class="banner-note">Business API unreachable in this environment — figures shown in the deck are illustrative of this same model.</div>`;
+    return;
+  }
+
+  const streams = [
+    {label:'Hospital Pro subscription', who:'Hospitals', rate:`₹${biz.rates.hospital_per_patient} / patient / mo`, value:biz.revenue.hospital_subscription, why:'Priced far below the ₹15,000–₹44,000 cost of one avoidable readmission.'},
+    {label:'Insurer / TPA data license', who:'Insurers & TPAs', rate:`₹${biz.rates.insurer_per_event} / verified event`, value:biz.revenue.insurer_license, why:'A verified adherence trail is a stronger underwriting signal than a self-report.'},
+    {label:'Pharmacy partner commission', who:'Partner pharmacies', rate:`₹${biz.rates.pharmacy_per_reorder} / reorder`, value:biz.revenue.pharmacy_commission, why:'The checklist becomes a contactless refill re-engagement point.'},
+  ];
+
+  document.getElementById('bizBody').innerHTML = `
+    <div class="biz-section-title">Pandemic impact snapshot</div>
+    <div class="biz-metric-grid">
+      <div class="biz-metric"><b>${biz.patients_monitored}</b><span>patients monitored remotely</span></div>
+      <div class="biz-metric"><b>${biz.avg_adherence}%</b><span>average adherence</span></div>
+      <div class="biz-metric"><b>${biz.bed_days_freed}</b><span>bed-days freed for surge care</span></div>
+      <div class="biz-metric"><b>${biz.verified_events}</b><span>verified events logged</span></div>
+    </div>
+    ${biz.flagged_patients.length ? `<div style="margin-top:10px">${biz.flagged_patients.map(p=>`<span class="flagged-pill">⚑ ${p} needs follow-up</span>`).join('')}</div>` : ''}
+
+    <div class="biz-section-title">Live revenue this month</div>
+    <div class="revenue-card">
+      <div class="budget-sub" style="color:rgba(255,255,255,.7)">TOTAL ACROSS ALL STREAMS</div>
+      <div class="revenue-total">₹${biz.revenue.total_this_month.toLocaleString()}</div>
+      <div class="revenue-row"><b>Hospital subscriptions</b><span>₹${biz.revenue.hospital_subscription.toLocaleString()}</span></div>
+      <div class="revenue-row"><b>Insurer data license</b><span>₹${biz.revenue.insurer_license.toLocaleString()}</span></div>
+      <div class="revenue-row"><b>Pharmacy commission</b><span>₹${biz.revenue.pharmacy_commission.toLocaleString()}</span></div>
+    </div>
+
+    <div class="biz-section-title">Revenue streams</div>
+    ${streams.map(s=>`
+      <div class="stream-card">
+        <div class="stream-top"><h3>${s.label}</h3><b>₹${s.value.toLocaleString()}</b></div>
+        <div class="stream-who">${s.who} · ${s.rate}</div>
+        <p>${s.why}</p>
+      </div>`).join('')}
+
+    <div class="biz-section-title">Simulate a pharmacy reorder</div>
+    <div class="pharmacy-sim">
+      <p>Every reorder placed from a patient's checklist earns MedEase a real, contactless commission — no in-person pharmacy visit needed.</p>
+      <button class="btn btn-primary" onclick="reorderMedicine().then(()=>renderBusiness())">💊 Simulate a reorder now</button>
+    </div>
+
+    <div class="banner-note">Free for patients. Paid for hospitals, insurers, pharmacies and public health departments — the people who save money or make money when recovery goes well.</div>
+  `;
+}
+
 function setActiveTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
 }
@@ -675,6 +795,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     if(btn.dataset.tab === 'home') renderHome();
     if(btn.dataset.tab === 'log') renderLog();
     if(btn.dataset.tab === 'state') renderLiveState();
+    if(btn.dataset.tab === 'business') renderBusiness();
   });
 });
 
